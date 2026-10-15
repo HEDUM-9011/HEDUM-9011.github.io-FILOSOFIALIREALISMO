@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pensamiento político | Estructura de trabajo por roles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f6f3ec;
+      --card: #ffffff;
+      --ink: #1b1b1b;
+      --muted: #5d5a54;
+      --primary: #1f2a44;
+      --coral: #e8604c;
+      --border: #ddd8cc;
+      --header-h: 132px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.65;
+    }
+    header.top {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--primary); color: #f6f3ec;
+      border-bottom: 3px solid var(--coral);
+    }
+    .top-inner { max-width: 1000px; margin: 0 auto; padding: 14px 20px 0; }
+    .top h1 {
+      margin: 0 0 10px;
+      font-family: "DM Serif Display", Georgia, serif;
+      font-weight: 400; font-size: 22px;
+    }
+    .top h1 small {
+      display: block; font-family: "Manrope", sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--coral); margin-bottom: 2px;
+    }
+    .tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; }
+    .tab {
+      flex: 0 0 auto; border: 0; cursor: pointer;
+      padding: 10px 16px; font: inherit; font-size: 13px; font-weight: 700;
+      color: rgba(246,243,236,.7); background: transparent;
+      border-bottom: 3px solid transparent;
+    }
+    .tab:hover { color: #fff; }
+    .tab[aria-selected="true"] {
+      color: #fff; background: rgba(255,255,255,.08);
+      border-bottom-color: var(--coral);
+    }
+    .tab .n { color: var(--coral); margin-right: 6px; }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 32px 20px 80px; }
+    .panel[hidden] { display: none; }
+
+    .panel-head { margin-bottom: 20px; }
+    .eyebrow {
+      margin: 0 0 6px; font-size: 12px; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--coral);
+    }
+    h2 {
+      margin: 0 0 8px; color: var(--primary);
+      font-family: "DM Serif Display", Georgia, serif;
+      font-weight: 400; font-size: clamp(28px, 4vw, 40px); line-height: 1.15;
+    }
+    .funcion { margin: 0; color: var(--muted); max-width: 70ch; }
+
+    .btn {
+      display: inline-block; margin-top: 18px; padding: 12px 22px;
+      background: var(--coral); color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 14px;
+    }
+    .btn:hover { filter: brightness(.93); }
+
+    .marcadores {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin: 24px 0; padding: 12px 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .marcadores span {
+      font-size: 11px; font-weight: 800; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted); margin-right: 4px;
+    }
+    .marcadores a {
+      padding: 6px 12px; font-size: 13px; font-weight: 600;
+      color: var(--primary); text-decoration: none;
+      background: var(--card); border: 1px solid var(--border);
+    }
+    .marcadores a:hover { border-color: var(--coral); color: var(--coral); }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 4px solid var(--coral);
+      padding: 24px 28px; margin-bottom: 16px;
+      scroll-margin-top: calc(var(--header-h) + 12px);
+    }
+    .card h3 {
+      margin: 0 0 12px; color: var(--primary);
+      font-family: "DM Serif Display", Georgia, serif;
+      font-weight: 400; font-size: 24px;
+    }
+    .card p { margin: 0 0 12px; }
+    .card p:last-child { margin-bottom: 0; }
+    .card ul { margin: 0; padding-left: 20px; }
+    .card li { margin-bottom: 8px; }
+    .card li:last-child { margin-bottom: 0; }
+    .label { font-weight: 800; color: var(--primary); }
+
+    .card.destacada { background: var(--primary); color: #f6f3ec; }
+    .card.destacada h3 { color: #fff; }
+    .card.destacada .label { color: var(--coral); }
+
+    .comentarios {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 24px 28px; margin-top: 32px;
+      scroll-margin-top: calc(var(--header-h) + 12px);
+    }
+    .comentarios h3 {
+      margin: 0 0 6px; color: var(--primary);
+      font-family: "DM Serif Display", Georgia, serif;
+      font-weight: 400; font-size: 24px;
+    }
+    .comentarios .nota { margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+    #giscus-container { min-height: 180px; }
+
+    @media (max-width: 600px) {
+      :root { --header-h: 150px; }
+      .card, .comentarios { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <h1><small>Democracia Participativa · Liberalismo · Proyeccionismo · Neoliberalismo</small>Estructura de trabajo por roles</h1>
+      <nav class="tabs" id="tabs" role="tablist" aria-label="Roles"></nav>
+    </div>
+  </header>
+
+  <main id="panels"></main>
+
+  <script>
+    /* ---------- CONFIGURACIÓN ---------- */
+    const GISCUS = {
+      repo: "HEDUM-9011/Filosof-alieralismo",
+      repoId: "R_kgDOVKW3vQ",
+      category: "[NOMBRE CATEGORÍA]",
+      categoryId: "[ID CATEGORÍA]",
+      mapping: "pathname",
+      inputPosition: "bottom",
+      lang: "es",
+      theme: "preferred_color_scheme"
+    };
+
+    const MINDMEISTER_URL = "https://www.mindmeister.com/app/map/4087072654?t=Zds0wcP6C9";
+
+    /* ---------- DATOS ---------- */
+    const DATA = {
+      tabs: [
+        {
+          id: "teorico",
+          titulo: "Teórico Principal",
+          subtitulo: "Fundamentos Ontológicos y Éticos",
+          funcion: "Expone las bases ontológicas y éticas del modelo.",
+          boton: { texto: "Abrir mapa mental en MindMeister", url: MINDMEISTER_URL },
+          secciones: [
+            {
+              id: "democracia", titulo: "Democracia Participativa",
+              items: [
+                { label: "Ontología", text: "El ser humano es por naturaleza un ser social y político. Su plenitud se alcanza participando en la construcción colectiva de la vida pública. La sociedad no es solo un conjunto de individuos, sino una comunidad que toma decisiones conjuntas." },
+                { label: "Ética", text: "El bien común está por encima del interés particular. La igualdad, la solidaridad y la corresponsabilidad son valores centrales. Toda persona tiene derecho y deber de participar en lo que le afecta." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Liberalismo",
+              items: [
+                { label: "Ontología", text: "El individuo es anterior a la sociedad. Cada persona tiene una existencia propia, con fines y autonomía que nadie debe arrebatarle. La sociedad surge para garantizar la convivencia entre personas libres." },
+                { label: "Ética", text: "La libertad individual es el valor supremo. Cada quien puede perseguir su propia felicidad siempre que no impida a otros hacer lo mismo. La justicia consiste en respetar los derechos de todos por igual." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Proyeccionismo",
+              items: [
+                { label: "Ontología", text: "Las relaciones entre naciones no dependen solo de hechos objetivos, sino de cómo cada país percibe al otro. La realidad internacional se construye también desde las creencias, miedos e historias de cada pueblo." },
+                { label: "Ética", text: "La prudencia y el autoconocimiento son esenciales. Antes de juzgar y actuar contra otro, conviene distinguir lo que realmente hace de lo que nosotros creemos que hace. Evitar proyectar nuestros miedos sobre otros es un deber de responsabilidad diplomática." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Neoliberalismo",
+              items: [
+                { label: "Ontología", text: "El ser humano es un ser racional que busca maximizar sus beneficios y reducir sus costos. La sociedad funciona mejor cuando cada individuo puede actuar libremente sin excesivas restricciones externas." },
+                { label: "Ética", text: "La libertad económica es parte esencial de la libertad humana. La eficiencia, la competencia y la responsabilidad individual son valores centrales. El mérito y el esfuerzo propio deben ser reconocidos y protegidos." }
+              ]
+            }
+          ]
+        },
+        {
+          id: "analista",
+          titulo: "Analista Socioeconómico",
+          subtitulo: "Modelo de Desarrollo y Riqueza",
+          funcion: "Sustenta cómo cada modelo resuelve el problema de la distribución de la riqueza y el trabajo.",
+          secciones: [
+            {
+              id: "democracia", titulo: "Democracia Participativa", modo: "parrafos",
+              items: [
+                { text: "La economía debe estar al servicio de las personas y no al revés. Se busca una distribución más equitativa de la riqueza mediante decisiones colectivas. La comunidad participa en definir qué producir, cómo y para quién. Se valora el trabajo digno y solidario. El Estado debe garantizar condiciones justas, pero también la ciudadanía vigila que así sea." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Liberalismo", modo: "parrafos",
+              items: [
+                { text: "El mercado es el mejor mecanismo para organizar la producción y el intercambio. Cada persona contribuye según su capacidad y obtiene a cambio lo que el mercado valora por su trabajo. La propiedad privada está garantizada. El Estado debe crear condiciones de igualdad de oportunidades, pero no igualar los resultados. La riqueza se genera cuando hay libertad para emprender y competir." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Proyeccionismo", modo: "parrafos",
+              items: [
+                { text: "No propone un modelo económico propio, pero influye en cómo los países deciden sus relaciones comerciales. Si un Estado percibe a otro como amenaza, puede imponer barreras comerciales o sanciones. Si lo percibe como aliado, puede abrir mercados e invertir. Las decisiones económicas internacionales están influidas por la confianza o desconfianza mutua." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Neoliberalismo", modo: "parrafos",
+              items: [
+                { text: "La riqueza se genera cuando el mercado funciona sin intervención excesiva del Estado. La competencia incentiva la eficiencia y la innovación. Los servicios y empresas públicas suelen privatizarse porque se considera que el sector privado los gestiona con mayor eficiencia. Se promueve la apertura comercial y la inversión extranjera. La distribución de la riqueza se deja principalmente en manos del mercado." }
+              ]
+            }
+          ]
+        },
+        {
+          id: "critico",
+          titulo: "Crítico Jurídico-Político",
+          subtitulo: "Estado, Libertad y Ley",
+          funcion: "Defiende el concepto de libertad, el individuo y el Estado según cada corriente.",
+          secciones: [
+            {
+              id: "democracia", titulo: "Democracia Participativa",
+              items: [
+                { label: "Estado", text: "Es una herramienta al servicio del pueblo. No es un ente separado de la ciudadanía; la ciudadanía debe intervenir directamente en sus decisiones." },
+                { label: "Libertad", text: "No es solo hacer lo que uno quiera, sino poder decidir colectivamente cómo queremos vivir. Se es libre cuando se participa." },
+                { label: "Ley", text: "Es el resultado del debate y el acuerdo colectivo. Las normas son legítimas cuando todos han podido participar en su creación." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Liberalismo",
+              items: [
+                { label: "Estado", text: "Debe ser limitado. Su función principal es proteger los derechos individuales: vida, libertad y propiedad. Si el Estado se excede, se convierte en una amenaza." },
+                { label: "Libertad", text: "Es el derecho a actuar sin interferencia mientras no se dañe a otros. Incluye libertad de expresión, de asociación, de culto y económica." },
+                { label: "Ley", text: "Es una regla general e imparcial que aplica a todos por igual. Limita tanto al ciudadano como al poder público. Nadie está por encima de la ley." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Proyeccionismo",
+              items: [
+                { label: "Estado", text: "Los Estados actúan según cómo ven el mundo. Su política exterior no depende solo de datos reales, sino de su propia identidad, historia y temores." },
+                { label: "Libertad", text: "Un Estado puede sentir que su libertad está amenazada incluso cuando no hay una amenaza real, solo porque interpreta las acciones de otro país de forma negativa." },
+                { label: "Ley", text: "El derecho internacional se aplica con dificultad cuando cada país juzga desde su propia perspectiva. Lo que para uno es defensa, para otro puede ser agresión." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Neoliberalismo",
+              items: [
+                { label: "Estado", text: "Debe ser mínimo y eficiente. Que intervenga lo menos posible en la economía y en la vida privada de las personas." },
+                { label: "Libertad", text: "La libertad económica es la base de todas las demás. Si no hay libertad de mercado, se pierde también la libertad política." },
+                { label: "Ley", text: "Debe garantizar el cumplimiento de contratos, proteger la propiedad privada y asegurar que el mercado funcione sin favoritismos." }
+              ]
+            }
+          ]
+        },
+        {
+          id: "defensor",
+          titulo: "Defensor de la Opinión",
+          subtitulo: "Alerta de Riesgos",
+          funcion: "Analiza los riesgos de cada corriente.",
+          secciones: [
+            {
+              id: "democracia", titulo: "Democracia Participativa",
+              items: [
+                { text: "Riesgo de lentitud en la toma de decisiones porque se requiere consultar y consensuar con muchas personas." },
+                { text: "Posible influencia desproporcionada de grupos con más recursos, tiempo o capacidad de persuasión sobre el resto." },
+                { text: "Dificultad para funcionar en sociedades muy grandes, ya que no todos pueden participar de forma directa." },
+                { text: "Riesgo de que la mayoría imponga su voluntad sobre minorías sin escuchar sus argumentos." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Liberalismo",
+              items: [
+                { text: "Si todos persiguen su propio interés sin límites, se pueden agravar las desigualdades sociales y económicas." },
+                { text: "Quienes tienen menos recursos reales no disfrutan de las mismas oportunidades de libertad que quienes tienen más." },
+                { text: "El principio de libertad puede usarse para justificar que el Estado no proteja a los más vulnerables." },
+                { text: "Las mayorías pueden aprobar leyes que limiten las libertades de las minorías (riesgo de la tiranía de la mayoría)." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Proyeccionismo",
+              items: [
+                { text: "Cada país puede interpretar mal las acciones de otros y creer que hay amenazas donde no las hay." },
+                { text: "Los prejuicios históricos o culturales pueden impedir acuerdos beneficiosos." },
+                { text: "Se pueden tomar decisiones diplomáticas o militares costosas basadas en suposiciones, no en hechos reales." },
+                { text: "La desconfianza mutua se convierte en una profecía autocumplida: al ver al otro como enemigo, terminamos convirtiéndolo en uno." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Neoliberalismo",
+              items: [
+                { text: "La reducción del papel del Estado puede debilitar o privatizar servicios esenciales como salud, educación y agua." },
+                { text: "Se profundizan las desigualdades sociales: quien tiene más recursos accede a mejores condiciones de vida, y quien no, queda desprotegido." },
+                { text: "La flexibilidad laboral puede generar precariedad: salarios bajos, pocos beneficios y menos estabilidad." },
+                { text: "El poder de las grandes empresas puede volverse mayor que el de los gobiernos, influyendo en las decisiones políticas." }
+              ]
+            }
+          ]
+        },
+        {
+          id: "debatiente",
+          titulo: "Debatiente de Contrapunto",
+          subtitulo: "Refutación",
+          funcion: "Presenta críticas que recibe cada modelo desde los demás.",
+          comentarios: {
+            id: "comentarios",
+            titulo: "Comentarios",
+            nota: "Participa en el debate. Los comentarios se guardan como discusiones en GitHub y necesitas una cuenta para escribir."
+          },
+          secciones: [
+            {
+              id: "democracia", titulo: "Críticas a la Democracia Participativa",
+              items: [
+                { label: "Desde el Liberalismo", text: "No es práctico en sociedades grandes; la gente no tiene tiempo ni conocimientos para decidir sobre todo. La representación es más eficiente." },
+                { label: "Desde el Neoliberalismo", text: "Demasiada participación colectiva puede entorpecer la libertad de mercado y la toma rápida de decisiones." },
+                { label: "Desde el Proyeccionismo", text: "En grupos grandes, también se proyectan prejuicios e intereses propios sobre las decisiones colectivas." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Críticas al Liberalismo",
+              items: [
+                { label: "Desde la Democracia Participativa", text: "La libertad que defiendes es solo para quienes tienen recursos reales. Si alguien no tiene qué comer, su libertad no sirve de mucho." },
+                { label: "Desde el Neoliberalismo", text: "Aún mantiene al Estado interviniendo en lo que no debe; hay que dejar actuar al mercado con menos regulaciones." },
+                { label: "Desde el Proyeccionismo", text: "La idea de que todos somos iguales ante la ley es una proyección idealista; en la práctica, las relaciones internacionales y sociales están marcadas por desigualdades reales." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Críticas al Proyeccionismo",
+              items: [
+                { label: "Desde la Democracia Participativa", text: "Las decisiones internacionales deberían basarse en hechos verificables y en el diálogo entre pueblos, no en lo que cada quien imagina del otro." },
+                { label: "Desde el Liberalismo", text: "Si cada quien juzga desde su propia perspectiva, no hay forma de acordar reglas comunes universales." },
+                { label: "Desde el Neoliberalismo", text: "Las decisiones deberían guiarse por intereses económicos objetivos y beneficios mutuos, no por miedos o suposiciones." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Críticas al Neoliberalismo",
+              items: [
+                { label: "Desde la Democracia Participativa", text: "Conviertes los derechos humanos en mercancías. La salud, la educación y el agua no deberían depender de cuánto dinero tenga cada persona." },
+                { label: "Desde el Liberalismo", text: "El mercado sin reglas también puede destruir la libertad de las personas más débiles. Necesitamos un Estado que ponga límites razonables." },
+                { label: "Desde el Proyeccionismo", text: "Creer que el mercado soluciona todo es también una proyección ideológica, no una verdad comprobada en todos los contextos." }
+              ]
+            }
+          ]
+        },
+        {
+          id: "relator",
+          titulo: "Sintetizador Relator",
+          subtitulo: "Manifiesto Siglo XXI",
+          funcion: "Redacta la postura oficial del grupo ante una crisis global del siglo XXI, integrando los aportes de los 5 roles.",
+          secciones: [
+            {
+              id: "introduccion", titulo: "Pensamiento político ante los retos del siglo XXI", modo: "parrafos",
+              items: [
+                { text: "Vivimos tiempos de grandes desafíos: crisis climática, desigualdad creciente, polarización social y transformaciones tecnológicas que cambian nuestra forma de vivir y relacionarnos. Ante esta realidad, las cuatro corrientes analizadas nos ofrecen miradas que, aunque distintas, pueden complementarse." }
+              ]
+            },
+            {
+              id: "democracia", titulo: "Desde la Democracia Participativa", modo: "parrafos",
+              items: [
+                { text: "Reconocemos que ningún modelo funcionará si la ciudadanía no está informada, escuchada y activa. Las decisiones que nos afectan a todos deben ser decididas con todos, no solo por unos pocos." }
+              ]
+            },
+            {
+              id: "liberalismo", titulo: "Desde el Liberalismo", modo: "parrafos",
+              items: [
+                { text: "Afirmamos que la libertad es un valor irrenunciable. Ninguna solución colectiva puede justificar la supresión de los derechos de las personas, ni de las minorías. La diversidad de voces es parte de la riqueza de nuestras sociedades." }
+              ]
+            },
+            {
+              id: "proyeccionismo", titulo: "Con el Proyeccionismo", modo: "parrafos",
+              items: [
+                { text: "Aprendemos que para resolver conflictos internacionales necesitamos honestidad intelectual. Debemos distinguir entre las acciones reales de otros países y lo que nosotros creemos o tememos que hacen. La comunicación sincera reduce malentendidos y evita guerras innecesarias." }
+              ]
+            },
+            {
+              id: "neoliberalismo", titulo: "Frente al Neoliberalismo", modo: "parrafos",
+              items: [
+                { text: "Reconocemos que la eficiencia y la iniciativa privada son motores importantes, pero no pueden estar por encima del bienestar humano. El Estado tiene un papel insustituible garantizando que el progreso llegue a todos, no solo a quienes tienen más recursos." }
+              ]
+            },
+            {
+              id: "conclusion", titulo: "En conclusión", destacada: true, modo: "parrafos",
+              items: [
+                { text: "El reto del siglo XXI no es elegir entre libertad o igualdad, mercado o participación. Es construir una sociedad donde la libertad no sea privilegio de unos pocos, donde la participación ciudadana vigile el poder económico, donde las relaciones entre naciones se basen en la confianza y el diálogo, y donde el desarrollo económico sirva para mejorar la vida de todas las personas." }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
+    /* ---------- RENDER ---------- */
+    const el = (tag, cls, text) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    };
+
+    const tabsNav = document.getElementById("tabs");
+    const panels = document.getElementById("panels");
+    const giscusLoaded = {};
+
+    function renderSection(tab, sec) {
+      const card = el("article", "card" + (sec.destacada ? " destacada" : ""));
+      card.id = tab.id + "-" + sec.id;
+      card.appendChild(el("h3", null, sec.titulo));
+
+      if (sec.modo === "parrafos") {
+        sec.items.forEach(i => card.appendChild(el("p", null, i.text)));
+        return card;
+      }
+
+      const ul = el("ul");
+      sec.items.forEach(i => {
+        const li = el("li");
+        if (i.label) {
+          li.appendChild(el("span", "label", i.label + ": "));
+        }
+        li.appendChild(document.createTextNode(i.text));
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+      return card;
+    }
+
+    DATA.tabs.forEach((tab, idx) => {
+      /* pestaña */
+      const btn = el("button", "tab");
+      btn.type = "button";
+      btn.id = "tab-" + tab.id;
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-controls", "panel-" + tab.id);
+      btn.setAttribute("aria-selected", "false");
+      const n = el("span", "n", String(idx + 1));
+      btn.appendChild(n);
+      btn.appendChild(document.createTextNode(tab.titulo));
+      btn.addEventListener("click", () => { location.hash = tab.id; });
+      tabsNav.appendChild(btn);
+
+      /* panel */
+      const panel = el("section", "panel");
+      panel.id = "panel-" + tab.id;
+      panel.setAttribute("role", "tabpanel");
+      panel.setAttribute("aria-labelledby", "tab-" + tab.id);
+      panel.hidden = true;
+
+      const head = el("div", "panel-head");
+      head.appendChild(el("p", "eyebrow", "Rol " + (idx + 1) + " · " + tab.subtitulo));
+      head.appendChild(el("h2", null, tab.titulo));
+      head.appendChild(el("p", "funcion", "Función: " + tab.funcion));
+
+      if (tab.boton) {
+        const a = el("a", "btn", tab.boton.texto + " ↗");
+        a.href = tab.boton.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        head.appendChild(a);
+      }
+      panel.appendChild(head);
+
+      /* marcadores */
+      const marks = el("nav", "marcadores");
+      marks.setAttribute("aria-label", "Marcadores de " + tab.titulo);
+      marks.appendChild(el("span", null, "Marcadores"));
+      tab.secciones.forEach(sec => {
+        const a = el("a", null, sec.titulo.replace(/^Críticas (a|al) /, ""));
+        a.href = "#" + tab.id + "/" + sec.id;
+        marks.appendChild(a);
+      });
+      if (tab.comentarios) {
+        const a = el("a", null, "💬 " + tab.comentarios.titulo);
+        a.href = "#" + tab.id + "/" + tab.comentarios.id;
+        marks.appendChild(a);
+      }
+      panel.appendChild(marks);
+
+      /* secciones */
+      tab.secciones.forEach(sec => panel.appendChild(renderSection(tab, sec)));
+
+      /* comentarios giscus */
+      if (tab.comentarios) {
+        const box = el("section", "comentarios");
+        box.id = tab.id + "-" + tab.comentarios.id;
+        box.appendChild(el("h3", null, tab.comentarios.titulo));
+        box.appendChild(el("p", "nota", tab.comentarios.nota));
+        const holder = el("div");
+        holder.id = "giscus-container";
+        box.appendChild(holder);
+        panel.appendChild(box);
+      }
+
+      panels.appendChild(panel);
+    });
+
+    /* ---------- GISCUS ---------- */
+    function loadGiscus() {
+      if (giscusLoaded.done) return;
+      giscusLoaded.done = true;
+      const s = document.createElement("script");
+      s.src = "https://giscus.app/client.js";
+      s.async = true;
+      s.crossOrigin = "anonymous";
+      s.setAttribute("data-repo", GISCUS.repo);
+      s.setAttribute("data-repo-id", GISCUS.repoId);
+      s.setAttribute("data-category", GISCUS.category);
+      s.setAttribute("data-category-id", GISCUS.categoryId);
+      s.setAttribute("data-mapping", GISCUS.mapping);
+      s.setAttribute("data-strict", "0");
+      s.setAttribute("data-reactions-enabled", "1");
+      s.setAttribute("data-emit-metadata", "0");
+      s.setAttribute("data-input-position", GISCUS.inputPosition);
+      s.setAttribute("data-theme", GISCUS.theme);
+      s.setAttribute("data-lang", GISCUS.lang);
+      document.getElementById("giscus-container").appendChild(s);
+    }
+
+    /* ---------- NAVEGACIÓN ---------- */
+    function show(tabId, secId) {
+      const tab = DATA.tabs.find(t => t.id === tabId) || DATA.tabs[0];
+
+      DATA.tabs.forEach(t => {
+        const selected = t.id === tab.id;
+        document.getElementById("tab-" + t.id).setAttribute("aria-selected", String(selected));
+        document.getElementById("panel-" + t.id).hidden = !selected;
+      });
+
+      document.getElementById("tab-" + tab.id).scrollIntoView({ block: "nearest", inline: "center" });
+
+      if (tab.comentarios) loadGiscus();
+
+      const target = secId ? document.getElementById(tab.id + "-" + secId) : null;
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0 });
+      }
+      document.title = tab.titulo + " | Pensamiento político";
+    }
+
+    function route() {
+      const [tabId, secId] = location.hash.replace("#", "").split("/");
+      show(tabId, secId);
+    }
+
+    window.addEventListener("hashchange", route);
+    route();
+  </script>
+</body>
+</html>
